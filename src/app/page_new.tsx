@@ -7,6 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CATEGORIES } from "@/lib/constants";
+import { Podcast, Episode } from "@/types";
 import { Play, TrendingUp, Clock, Star } from "lucide-react";
 
 export default function Home() {
@@ -43,7 +44,7 @@ export default function Home() {
     )
     .sort(
       (a, b) =>
-        new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime()
+        new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
     )
     .slice(0, 6);
 
