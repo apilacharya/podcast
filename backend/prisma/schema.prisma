@@ -78,11 +78,13 @@ model Podcast {
     updatedAt       DateTime @updatedAt
 
     creatorId String
-    creator   User   @relation(fields: [creatorId], references: [id])
+   
 
     episodes      Episode[]
     subscriptions Subscription[]
     reviews       Review[]
+
+     creator   User   @relation(fields: [creatorId], references: [id])
 
     @@index([slug])
     @@index([category])
@@ -90,3 +92,64 @@ model Podcast {
 }
 
 
+model Episode {
+    id String @id @default(cuid())
+    title String
+    slug String
+    description String?
+    audioUrl String
+    duration Int
+    episodeNumber Int
+    isPublished Boolean @default(false)
+    publishDate String 
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    podcastId String
+    creatorId String
+
+    podcast Podcast @relation(fields: [podcastId], references: [id], onDelete: Cascade)
+    
+    creator User @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+
+    @@unique([podcastId, slug]) //The @@unique([podcastId, slug]) constraint means that the combination of podcastId and slug must be unique across the entire Episode table
+    @@index([slug])
+    @@index([publishDate])
+    @@index([isPublished])
+  @@index([creatorId])
+
+}
+
+model Subscription {
+   id String @id @default(cuid())
+    userId String
+    podcastId String
+    createdAt DateTime @default(now())
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    podcast Podcast @relation(fields: [podcastId], references: [id], onDelete: Cascade)
+
+    @@unique([userId, podcastId]) // A user can only subscribe to a podcast once
+    @@index([userId])
+    @@index([podcastId])
+}
+
+model Review {
+    id String @id @default(cuid())
+   userId String
+   podcastId String
+   rating Int
+    comment String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    podcast Podcast @relation(fields: [podcastId], references: [id], onDelete: Cascade)
+
+    @@unique([userId, podcastId]) // A user can only review a podcast once
+    @@index([podcastId])
+    @@index ([rating])
+}
+
+model RoleChange
