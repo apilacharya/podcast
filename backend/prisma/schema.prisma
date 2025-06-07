@@ -1,46 +1,92 @@
 generator client {
-  provider        = "prisma-client-js"
+    provider = "prisma-client-js"
 }
+
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+    provider  = "postgresql"
+    url       = env("DATABASE_URL")
+    directUrl = env("DIRECT_URL")
+}
+
+enum UserRole {
+    LISTENER
+    CREATOR
+    ADMIN
+}
+
+enum UploadStatus {
+    PENDING
+    PROCESSING
+    COMPLETED
+    FAILED
 }
 
 model User {
-    id String @id @default(cuid())
-    email String @unique
-    displayName String?
+    id           String   @id @default(cuid())
+    email        String   @unique
+    displayName  String?
     passwordHash String
-    avatar String?
-    bio String?
+    avatar       String?
+    bio          String?
+    role         UserRole @default(LISTENER)
+    isVerified   Boolean  @default(false)
+    createdAt    DateTime @default(now())
+    updatedAt    DateTime @updatedAt
 
-sessions Session[]
-podcasts Podcast[]
-episodes Episode[]
-subscriptions Subscription[]
-reviews Review[]
-uploads Upload[]
+    // authentication
+    sessions Session[]
 
+    podcasts      Podcast[]
+    episodes      Episode[]
+    subscriptions Subscription[]
+    reviews       Review[]
+    uploads       Upload[]
+
+    roleChanges   RoleChange[] @relation("UserRoleChanges")
+    roleChangedBy RoleChange[] @relation("AdminRoleChanges")
+
+    @@index([email])
+    @@index([role])
 }
 
 model Session {
-    id String @id
+    id        String   @id
     expiresAt DateTime
-    userId String
+    userId    String
 
     user User @relation(fields: [userId], references: [id], onDelete: Cascade) // all record of this user will be deleted when the user is deleted including this session
+
     @@index([userId])
 }
 
-model Podcast { 
-    id String @id @default(cuid())
-    title String
-    description String?
-    slug String @unique
-    imageUrl String
-    category String
-    language String @default("en")
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+model Podcast {
+    id              String   @id @default(cuid())
+    title           String
+    description     String?
+    slug            String   @unique
+    imageUrl        String
+    category        String
+    language        String   @default("en")
+    tags            String[]
+    rating          Float    @default(0.0)
+    subscriberCount Int      @default(0)
+    totalEpisodes   Int      @default(0)
+    isExplicit      Boolean  @default(false)
+    isActive        Boolean  @default(true)
+    isPublic        Boolean  @default(true)
+    createdAt       DateTime @default(now())
+    updatedAt       DateTime @updatedAt
+
+    creatorId String
+    creator   User   @relation(fields: [creatorId], references: [id])
+
+    episodes      Episode[]
+    subscriptions Subscription[]
+    reviews       Review[]
+
+    @@index([slug])
+    @@index([category])
+    @@index([createdAt])
 }
+
+
