@@ -41,9 +41,7 @@ model User {
     subscriptions Subscription[]
     reviews       Review[]
     uploads       Upload[]
-
-    roleChanges   RoleChange[] @relation("UserRoleChanges")
-    roleChangedBy RoleChange[] @relation("AdminRoleChanges")
+    roleChanges   RoleChange[]
 
     @@index([email])
     @@index([role])
@@ -78,30 +76,28 @@ model Podcast {
     updatedAt       DateTime @updatedAt
 
     creatorId String
-   
 
     episodes      Episode[]
     subscriptions Subscription[]
     reviews       Review[]
 
-     creator   User   @relation(fields: [creatorId], references: [id])
+    creator User @relation(fields: [creatorId], references: [id])
 
     @@index([slug])
     @@index([category])
     @@index([createdAt])
 }
 
-
 model Episode {
-    id String @id @default(cuid())
-    title String
-    slug String
-    description String?
-    audioUrl String
-    duration Int
+    id            String  @id @default(cuid())
+    title         String
+    slug          String
+    description   String?
+    audioUrl      String
+    duration      Int
     episodeNumber Int
-    isPublished Boolean @default(false)
-    publishDate String 
+    isPublished   Boolean @default(false)
+    publishDate   String
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -110,24 +106,23 @@ model Episode {
     creatorId String
 
     podcast Podcast @relation(fields: [podcastId], references: [id], onDelete: Cascade)
-    
+
     creator User @relation(fields: [creatorId], references: [id], onDelete: Cascade)
 
     @@unique([podcastId, slug]) //The @@unique([podcastId, slug]) constraint means that the combination of podcastId and slug must be unique across the entire Episode table
     @@index([slug])
     @@index([publishDate])
     @@index([isPublished])
-  @@index([creatorId])
-
+    @@index([creatorId])
 }
 
 model Subscription {
-   id String @id @default(cuid())
-    userId String
+    id        String   @id @default(cuid())
+    userId    String
     podcastId String
     createdAt DateTime @default(now())
 
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
     podcast Podcast @relation(fields: [podcastId], references: [id], onDelete: Cascade)
 
     @@unique([userId, podcastId]) // A user can only subscribe to a podcast once
@@ -136,20 +131,47 @@ model Subscription {
 }
 
 model Review {
-    id String @id @default(cuid())
-   userId String
-   podcastId String
-   rating Int
-    comment String?
+    id        String   @id @default(cuid())
+    userId    String
+    podcastId String
+    rating    Int
+    comment   String?
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
     podcast Podcast @relation(fields: [podcastId], references: [id], onDelete: Cascade)
 
     @@unique([userId, podcastId]) // A user can only review a podcast once
     @@index([podcastId])
-    @@index ([rating])
+    @@index([rating])
 }
 
-model RoleChange
+model Upload {
+    id        String       @id @default(cuid())
+    userId    String
+    fileName  String
+    fileUrl   String
+    fileSize  Int
+    status    UploadStatus @default(PENDING)
+    createdAt DateTime     @default(now())
+    updatedAt DateTime     @updatedAt
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@index([userId])
+    @@index([status])
+}
+
+model RoleChange {
+    id        String   @id @default(cuid())
+    userId    String
+    fromRole  UserRole
+    toRole    UserRole
+    reason    String?
+    createdAt DateTime @default(now())
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@index([userId])
+}
