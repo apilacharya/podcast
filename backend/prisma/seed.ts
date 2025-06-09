@@ -1,7 +1,7 @@
-import { PrismaClient, UserRole, UploadStatus } from '@prisma/client';
+import {  UserRole, UploadStatus } from '@prisma/client';
 import { hash } from 'bcrypt';
+import { prisma } from '../lib/prisma';
 
-const prisma = new PrismaClient();
 
 // Helper function to create a slug from title
 function createSlug(title: string): string {
@@ -44,6 +44,7 @@ async function main() {
     prisma.user.create({
       data: {
         email: 'admin@podcast.com',
+        username: 'admin',
         displayName: 'Admin User',
         passwordHash: hashedPassword,
         avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
@@ -57,6 +58,7 @@ async function main() {
     prisma.user.create({
       data: {
         email: 'sarah.johnson@podcast.com',
+        username: 'sarah_johnson',
         displayName: 'Sarah Johnson',
         passwordHash: hashedPassword,
         avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
@@ -69,6 +71,7 @@ async function main() {
     prisma.user.create({
       data: {
         email: 'mike.chen@podcast.com',
+        username: 'mike_chen',
         displayName: 'Mike Chen',
         passwordHash: hashedPassword,
         avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
@@ -81,6 +84,7 @@ async function main() {
     prisma.user.create({
       data: {
         email: 'emma.williams@podcast.com',
+        username: 'emma_williams',
         displayName: 'Emma Williams',
         passwordHash: hashedPassword,
         avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
@@ -93,6 +97,7 @@ async function main() {
     prisma.user.create({
       data: {
         email: 'david.garcia@podcast.com',
+        username: 'david_garcia',
         displayName: 'David Garcia',
         passwordHash: hashedPassword,
         avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face',
@@ -106,6 +111,7 @@ async function main() {
     prisma.user.create({
       data: {
         email: 'alice.brown@email.com',
+        username: 'alice_brown',
         displayName: 'Alice Brown',
         passwordHash: hashedPassword,
         avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face',
@@ -118,6 +124,7 @@ async function main() {
     prisma.user.create({
       data: {
         email: 'john.doe@email.com',
+        username: 'john_doe',
         displayName: 'John Doe',
         passwordHash: hashedPassword,
         avatar: 'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?w=150&h=150&fit=crop&crop=face',
@@ -130,6 +137,7 @@ async function main() {
     prisma.user.create({
       data: {
         email: 'lisa.taylor@email.com',
+        username: 'lisa_taylor',
         displayName: 'Lisa Taylor',
         passwordHash: hashedPassword,
         avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop&crop=face',
@@ -142,6 +150,7 @@ async function main() {
     prisma.user.create({
       data: {
         email: 'robert.wilson@email.com',
+        username: 'robert_wilson',
         displayName: 'Robert Wilson',
         passwordHash: hashedPassword,
         avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
@@ -154,6 +163,7 @@ async function main() {
     prisma.user.create({
       data: {
         email: 'maria.rodriguez@email.com',
+        username: 'maria_rodriguez',
         displayName: 'Maria Rodriguez',
         passwordHash: hashedPassword,
         avatar: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=150&h=150&fit=crop&crop=face',

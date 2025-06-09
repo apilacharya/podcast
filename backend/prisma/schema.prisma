@@ -24,12 +24,13 @@ enum UploadStatus {
 model User {
     id           String   @id @default(cuid())
     email        String   @unique
+    username     String   @unique
     displayName  String?
     passwordHash String
     avatar       String?
     bio          String?
     role         UserRole @default(LISTENER)
-    isVerified   Boolean  @default(false)
+    isVerified   Boolean  @default(false) // verified via email
     createdAt    DateTime @default(now())
     updatedAt    DateTime @updatedAt
 
