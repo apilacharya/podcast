@@ -1,8 +1,7 @@
 import { Router } from "express";
 
-const authRoutes: Router = Router()
+const authRoutes: Router = Router();
 
-authRoutes.post('/signup', signup);
-authRoutes.post('/signin', signin);
+authRoutes.post("/signup", signup);
 
 export default authRoutes;
